@@ -1,0 +1,26 @@
+### CREATE NEW USER
+POST http://localhost:3000/user HTTP/1.1
+content-type: application/json
+
+{
+    "name": "New name",
+    "lastName": "New lastname",
+    "email": "new@email.com",
+    "rut": "new rut"
+}
+
+### UPDATE USER
+PUT http://localhost:3000/user/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "user update"
+}
+
+### GET USER BY RUT
+GET http://localhost:3000/user/new rut HTTP/1.1
+content-type: application/json
+
+### DELETE USER BY ID
+DELETE http://localhost:3000/user/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json

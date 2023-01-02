@@ -7,9 +7,13 @@ export class CreateUserDto {
 
   @IsDefined()
   @IsString()
-  lastname: string;
+  lastName: string;
 
   @IsDefined()
   @IsString()
   email: string;
+
+  @IsDefined()
+  @IsString()
+  rut: string;
 }
