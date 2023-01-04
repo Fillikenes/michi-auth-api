@@ -24,3 +24,28 @@ content-type: application/json
 ### DELETE USER BY ID
 DELETE http://localhost:3000/user/63b340af9709b7ab377bd285 HTTP/1.1
 content-type: application/json
+
+
+### CREATE NEW PERMISION
+POST http://localhost:3000/permission HTTP/1.1
+content-type: application/json
+
+{
+    "name": "New name"
+}
+
+### UPDATE PERMISION
+PUT http://localhost:3000/permission/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "permission update"
+}
+
+### GET PERMISSION BY ID
+GET http://localhost:3000/permission/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+
+### DELETE PERMISSION BY ID
+DELETE http://localhost:3000/permission/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
