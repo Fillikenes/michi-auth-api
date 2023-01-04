@@ -35,23 +35,23 @@ describe('UserController', () => {
 
   describe('#createUser', () => {
     it('should create a new user in the db', async () => {
-      const params = {
+      const paramsBody = {
         name: 'New name',
         lastName: 'New lastname',
         email: 'new@email.com',
       } as CreateUserDto;
 
-      const expectedResponse = { id: '123', ...params };
+      const expectedResponse = { id: '123', ...paramsBody };
       const createUserSpy = jest
         .spyOn(userService, 'createUser')
         .mockResolvedValue(expectedResponse);
 
-      const result = await controller.createUser(params);
+      const result = await controller.createUser(paramsBody);
 
       expect(result).toBeDefined();
       expect(result).toEqual(expectedResponse);
       expect(createUserSpy).toHaveBeenCalled();
-      expect(createUserSpy).toHaveBeenCalledWith(params);
+      expect(createUserSpy).toHaveBeenCalledWith(paramsBody);
     });
   });
 

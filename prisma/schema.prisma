@@ -17,3 +17,9 @@ model User {
   email String
   rut String  @unique
 }
+
+
+model Permission {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+}
