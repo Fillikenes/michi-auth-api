@@ -41,7 +41,12 @@ describe('UserController', () => {
         email: 'new@email.com',
       } as CreateUserDto;
 
-      const expectedResponse = { id: '123', ...paramsBody };
+      const expectedResponse = {
+        id: '123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...paramsBody,
+      };
       const createUserSpy = jest
         .spyOn(userService, 'createUser')
         .mockResolvedValue(expectedResponse);
@@ -63,7 +68,13 @@ describe('UserController', () => {
         lastName: 'New lastname',
         email: 'new@email.com',
       } as UpdateUserDto;
-      const expectedResponse = { id: paramId, rut: 'New rut', ...paramsBody };
+      const expectedResponse = {
+        id: paramId,
+        rut: 'New rut',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...paramsBody,
+      };
       const updateUserSpy = jest
         .spyOn(userService, 'updateUser')
         .mockResolvedValue(expectedResponse);
@@ -86,6 +97,8 @@ describe('UserController', () => {
         lastName: 'New lastname',
         email: 'new@email.com',
         rut: 'New rut',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       const deleteUserSpy = jest
         .spyOn(userService, 'deleteUser')
@@ -109,6 +122,8 @@ describe('UserController', () => {
         lastName: 'New lastname',
         email: 'new@email.com',
         rut: 'New rut',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       const getUserByRutSpy = jest
         .spyOn(userService, 'getUserByRut')

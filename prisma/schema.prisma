@@ -1,25 +1,47 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
 }
 
 model User {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  lastName String 
-  email String
-  rut String  @unique
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  lastName        String 
+  email           String
+  rut             String           @unique
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  authorization   Authorization?
 }
 
-
 model Permission {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  id      String      @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  roles   Role[]      @relation(fields: [roleIds], references: [id])
+  roleIds String[]    @db.ObjectId
+}
+
+model Role {
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  permissions   Permission[]    @relation(fields: [permissionIds], references: [id])
+  permissionIds String[]        @db.ObjectId
+  authorization Authorization?
+}
+
+model Authorization {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  password String
+  user     User      @relation(fields: [userRut], references: [rut])
+  userRut  String    @unique
+  role     Role      @relation(fields: [roleId], references: [id])
+  roleId   String    @db.ObjectId @unique
 }

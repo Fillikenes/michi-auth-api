@@ -44,7 +44,12 @@ describe('UserService', () => {
         rut: 'New rut',
       };
 
-      const expectedResponse = { id: '1234', ...params };
+      const expectedResponse = {
+        id: '1234',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        ...params,
+      };
       const createSpy = jest
         .spyOn(prismaService.user, 'create')
         .mockResolvedValue(expectedResponse);
@@ -74,6 +79,8 @@ describe('UserService', () => {
         name: params.name,
         lastName: params.lastName,
         email: params.email,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       const updateSpy = jest
@@ -101,6 +108,8 @@ describe('UserService', () => {
         lastName: 'New lastname',
         email: 'new@email.com',
         rut: 'New rut',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       const deleteSpy = jest
@@ -126,6 +135,8 @@ describe('UserService', () => {
         lastName: 'New lastname',
         email: 'new@email.com',
         rut,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       const findFirstSpy = jest

@@ -3,11 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { PermissionModule } from './modules/permission/permission.module';
+import { RoleModule } from './modules/role/role.module';
 import { UserModule } from './modules/user/user.module';
 import { PrismaModule } from './shared/services/prisma/prisma.module';
 
 @Module({
-  imports: [ConfigModule, PrismaModule, UserModule, PermissionModule],
+  imports: [
+    ConfigModule,
+    PrismaModule,
+    UserModule,
+    PermissionModule,
+    RoleModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

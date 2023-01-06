@@ -36,7 +36,7 @@ describe('PermissionController', () => {
   describe('#createPermission', () => {
     it('should create a new permission in the db', async () => {
       const paramsBody = { name: 'New name' } as CreatePermissionDto;
-      const expectedResponse = { id: '123', ...paramsBody };
+      const expectedResponse = { id: '123', roleIds: [], ...paramsBody };
       const createPermissionSpy = jest
         .spyOn(permissionService, 'createPermission')
         .mockResolvedValue(expectedResponse);
@@ -54,7 +54,7 @@ describe('PermissionController', () => {
     it('should update a permission from db based in the id given as argument', async () => {
       const paramId = '1234';
       const paramsBody = { name: 'New name' };
-      const expectedResponse = { id: paramId, ...paramsBody };
+      const expectedResponse = { id: paramId, roleIds: [], ...paramsBody };
       const updatePermissionSpy = jest
         .spyOn(permissionService, 'updatePermission')
         .mockResolvedValue(expectedResponse);
@@ -74,7 +74,7 @@ describe('PermissionController', () => {
   describe('#deletePermission', () => {
     it('should delete a specific permission from db based in the argument given', async () => {
       const params = { id: '1234' };
-      const expectedResponse = { id: params.id, name: 'New name' };
+      const expectedResponse = { id: params.id, roleIds: [], name: 'New name' };
       const deletePermissionSpy = jest
         .spyOn(permissionService, 'deletePermission')
         .mockResolvedValue(expectedResponse);
@@ -91,7 +91,7 @@ describe('PermissionController', () => {
   describe('#getPermissionByRut', () => {
     it('should get a specific permission from db based in the argument given', async () => {
       const params = { id: '1234' };
-      const expectedResponse = { id: params.id, name: 'New name' };
+      const expectedResponse = { id: params.id, roleIds: [], name: 'New name' };
       const getPermissionByIdSpy = jest
         .spyOn(permissionService, 'getPermissionById')
         .mockResolvedValue(expectedResponse);
