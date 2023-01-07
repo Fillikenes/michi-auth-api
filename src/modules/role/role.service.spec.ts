@@ -1,19 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../shared/services/prisma/prisma.service';
-import { PermissionService } from './permission.service';
+import { RoleCreateParams } from './params/role-create.params';
+import { RoleService } from './role.service';
 
-describe('PermissionService', () => {
-  let service: PermissionService;
+describe('RoleService', () => {
+  let service: RoleService;
   let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        PermissionService,
+        RoleService,
         {
           provide: PrismaService,
           useValue: {
-            permission: {
+            role: {
               create: jest.fn(),
               update: jest.fn(),
               delete: jest.fn(),
@@ -24,7 +25,7 @@ describe('PermissionService', () => {
       ],
     }).compile();
 
-    service = module.get<PermissionService>(PermissionService);
+    service = module.get<RoleService>(RoleService);
     prismaService = module.get<PrismaService>(PrismaService);
   });
 
@@ -34,54 +35,61 @@ describe('PermissionService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('#createPermission', () => {
-    it('should create a new permission in the db based in the properties given as arguments', async () => {
-      const name = 'New name';
-      const expectedResponse = { id: '1234', roleIds: [], name };
+  describe('#createRole', () => {
+    it('should create a new role in the db based in the properties given as arguments', async () => {
+      const params = {
+        name: 'New name',
+        permissionIds: [],
+      } as RoleCreateParams;
+
+      const expectedResponse = { id: '1234', ...params };
       const createSpy = jest
-        .spyOn(prismaService.permission, 'create')
+        .spyOn(prismaService.role, 'create')
         .mockResolvedValue(expectedResponse);
 
-      const result = await service.createPermission(name);
+      const result = await service.createRole(params);
 
       expect(result).toBeDefined();
       expect(result).toEqual(expectedResponse);
       expect(createSpy).toHaveBeenCalled();
-      expect(createSpy).toHaveBeenCalledWith({ data: { name } });
+      expect(createSpy).toHaveBeenCalledWith({ data: params });
     });
   });
 
-  describe('#updatePermission', () => {
-    it('should update the properties of a permission from db', async () => {
+  describe('#updateRole', () => {
+    it('should update the properties of a role from db', async () => {
       const id = '1234';
-      const name = 'New name';
-      const expectedResponse = { id, roleIds: [], name };
+      const params = {
+        name: 'New name',
+        permissionIds: ['1234-abcd'],
+      } as RoleCreateParams;
+      const expectedResponse = { id, ...params };
 
       const updateSpy = jest
-        .spyOn(prismaService.permission, 'update')
+        .spyOn(prismaService.role, 'update')
         .mockResolvedValue(expectedResponse);
 
-      const result = await service.updatePermission(id, name);
+      const result = await service.updateRole(id, params);
 
       expect(result).toBeDefined();
       expect(result).toEqual(expectedResponse);
       expect(updateSpy).toHaveBeenCalled();
       expect(updateSpy).toHaveBeenCalledWith({
         where: { id },
-        data: { name },
+        data: params,
       });
     });
   });
 
-  describe('#deletePermission', () => {
-    it('should delete a specific permission from db by id given as argument', async () => {
+  describe('#deleteRole', () => {
+    it('should delete a specific role from db by id given as argument', async () => {
       const id = '1234';
-      const expectedResponse = { id, roleIds: [], name: 'New name' };
+      const expectedResponse = { id, name: 'New name', permissionIds: [] };
       const deleteSpy = jest
-        .spyOn(prismaService.permission, 'delete')
+        .spyOn(prismaService.role, 'delete')
         .mockResolvedValue(expectedResponse);
 
-      const result = await service.deletePermission(id);
+      const result = await service.deleteRole(id);
 
       expect(result).toBeDefined();
       expect(result).toEqual(expectedResponse);
@@ -90,24 +98,30 @@ describe('PermissionService', () => {
     });
   });
 
-  describe('#getPermissionByRut ', () => {
-    it('should return a specific permission from db by rut given as argument', async () => {
+  describe('#getRoleByRut ', () => {
+    it('should return a specific role from db by rut given as argument', async () => {
       const id = '1234';
-      const expectedResponse = { id, roleIds: [], name: 'New name' };
+      const expectedResponse = { id, name: 'New name', permissionIds: [] };
       const findFirstSpy = jest
-        .spyOn(prismaService.permission, 'findFirst')
+        .spyOn(prismaService.role, 'findFirst')
         .mockResolvedValue(expectedResponse);
 
-      const result = await service.getPermissionById(id);
+      const result = await service.getRoleById(id);
 
       expect(result).toBeDefined();
       expect(result).toEqual(expectedResponse);
       expect(findFirstSpy).toHaveBeenCalled();
 
-      expect(findFirstSpy).toHaveBeenCalledWith({ where: { id } });
+      expect(findFirstSpy).toHaveBeenCalledWith({
+        where: { id },
+        include: { permissions: true },
+      });
 
       const [firstArgument] = findFirstSpy.mock.lastCall;
-      expect(firstArgument).toEqual({ where: { id } });
+      expect(firstArgument).toEqual({
+        where: { id },
+        include: { permissions: true },
+      });
       expect(firstArgument).toHaveProperty('where', { id });
     });
   });

@@ -1,2 +1,2 @@
-export * from './userCreate.params';
-export * from './userUpdate.params';
+export * from './user-create.params';
+export * from './user-update.params';

@@ -3,9 +3,9 @@ POST http://localhost:3000/user HTTP/1.1
 content-type: application/json
 
 {
-    "name": "New name",
-    "lastName": "New lastname",
-    "email": "new@email.com",
+    "name": "New user",
+    "lastName": "user lastname",
+    "email": "user@email.com",
     "rut": "new rut"
 }
 
@@ -31,7 +31,8 @@ POST http://localhost:3000/permission HTTP/1.1
 content-type: application/json
 
 {
-    "name": "New name"
+    "name": "New permission",
+    "permissionIds": ["63b77cb1d501bee01d955f14"]
 }
 
 ### UPDATE PERMISION
@@ -39,13 +40,39 @@ PUT http://localhost:3000/permission/63b340af9709b7ab377bd285 HTTP/1.1
 content-type: application/json
 
 {
-    "name": "permission update"
+    "name": "permission update",
 }
 
 ### GET PERMISSION BY ID
-GET http://localhost:3000/permission/63b340af9709b7ab377bd285 HTTP/1.1
+GET http://localhost:3000/permission/63b62b3f8023d79ec3957973 HTTP/1.1
 content-type: application/json
 
 ### DELETE PERMISSION BY ID
-DELETE http://localhost:3000/permission/63b340af9709b7ab377bd285 HTTP/1.1
+DELETE http://localhost:3000/permission/63b77cb1d501bee01d955f14 HTTP/1.1
+content-type: application/json
+
+
+### CREATE NEW ROLE
+POST http://localhost:3000/role HTTP/1.1
+content-type: application/json
+
+{
+    "name": "New role",
+    "permissionIds": ["63b77cb1d501bee01d955f14"]
+}
+
+### UPDATE ROLE
+PUT http://localhost:3000/role/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "role update"
+}
+
+### GET ROLE BY ID
+GET http://localhost:3000/role/63b77daabc1e7ea30f70333c HTTP/1.1
+content-type: application/json
+
+### DELETE ROLE BY ID
+DELETE http://localhost:3000/role/63b77daabc1e7ea30f70333c HTTP/1.1
 content-type: application/json
