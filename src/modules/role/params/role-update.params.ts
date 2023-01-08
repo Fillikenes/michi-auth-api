@@ -1,4 +1,4 @@
-export interface RoleUpdateParams {
+export interface IRoleUpdateParams {
   name?: string;
   permissionIds?: string[];
 }

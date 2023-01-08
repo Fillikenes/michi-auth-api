@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../shared/services/prisma/prisma.service';
-import { RoleCreateParams } from './params/role-create.params';
+import { IRoleCreateParams } from './params/role-create.params';
 import { RoleService } from './role.service';
 
 describe('RoleService', () => {
@@ -40,7 +40,7 @@ describe('RoleService', () => {
       const params = {
         name: 'New name',
         permissionIds: [],
-      } as RoleCreateParams;
+      } as IRoleCreateParams;
 
       const expectedResponse = { id: '1234', ...params };
       const createSpy = jest
@@ -62,7 +62,7 @@ describe('RoleService', () => {
       const params = {
         name: 'New name',
         permissionIds: ['1234-abcd'],
-      } as RoleCreateParams;
+      } as IRoleCreateParams;
       const expectedResponse = { id, ...params };
 
       const updateSpy = jest

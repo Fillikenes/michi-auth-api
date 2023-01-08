@@ -45,3 +45,4 @@ model Authorization {
   role     Role      @relation(fields: [roleId], references: [id])
   roleId   String    @db.ObjectId @unique
 }
+

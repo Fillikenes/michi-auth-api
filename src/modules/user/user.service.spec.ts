@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../../shared/services/prisma/prisma.service';
-import { UserCreateParams, UserUpdateParams } from './params';
+import { IUserCreateParams, IUserUpdateParams } from './params';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
@@ -37,7 +37,7 @@ describe('UserService', () => {
 
   describe('#createUser', () => {
     it('should create a new user in the db based in the properties given as arguments', async () => {
-      const params: UserCreateParams = {
+      const params: IUserCreateParams = {
         name: 'New name',
         lastName: 'New lastname',
         email: 'new@email.com',
@@ -67,7 +67,7 @@ describe('UserService', () => {
     it('should update the properties of a user from db', async () => {
       const id = '1234';
 
-      const params: UserUpdateParams = {
+      const params: IUserUpdateParams = {
         name: 'New name',
         lastName: 'New lastname',
         email: 'new@email.com',
@@ -128,7 +128,6 @@ describe('UserService', () => {
   describe('#getUserByRut ', () => {
     it('should return a specific user from db by rut given as argument', async () => {
       const rut = 'New rut';
-
       const expectedResponse = {
         id: '1234',
         name: 'New name',
@@ -154,6 +153,43 @@ describe('UserService', () => {
       const [firstArgument] = findFirstSpy.mock.lastCall;
       expect(firstArgument).toEqual({ where: { rut } });
       expect(firstArgument).toHaveProperty('where', { rut });
+    });
+  });
+
+  describe('#getUserByEmail ', () => {
+    it('should return a specific user from db by email given as argument', async () => {
+      const email = 'new@email.com';
+      const expectedResponse = {
+        id: '1234',
+        name: 'New name',
+        lastName: 'New lastname',
+        email,
+        rut: 'New rut',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const findFirstSpy = jest
+        .spyOn(prismaService.user, 'findFirst')
+        .mockResolvedValue(expectedResponse);
+
+      const result = await service.getUserByEmail(email);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(expectedResponse);
+      expect(findFirstSpy).toHaveBeenCalled();
+
+      expect(findFirstSpy).toHaveBeenCalledWith({
+        where: { email },
+        include: { authorization: true },
+      });
+
+      const [firstArgument] = findFirstSpy.mock.lastCall;
+      expect(firstArgument).toEqual({
+        where: { email },
+        include: { authorization: true },
+      });
+      expect(firstArgument).toHaveProperty('where', { email });
     });
   });
 });

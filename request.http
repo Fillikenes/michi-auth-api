@@ -76,3 +76,26 @@ content-type: application/json
 ### DELETE ROLE BY ID
 DELETE http://localhost:3000/role/63b77daabc1e7ea30f70333c HTTP/1.1
 content-type: application/json
+
+
+### Register
+POST http://localhost:3000/auth/register HTTP/1.1
+content-type: application/json
+
+{
+    "name": "New user 2",
+    "lastName": "user lastname",
+    "email": "user2@email.com",
+    "rut": "new rut 2",
+    "password": "1234",
+    "roleId": "63bad6805ef2c7f54a84aeb2"
+}
+
+### Register
+POST http://localhost:3000/auth/login HTTP/1.1
+content-type: application/json
+
+{
+    "email": "user2@email.com",
+    "password": "1234"
+}
