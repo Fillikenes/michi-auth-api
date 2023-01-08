@@ -1,4 +1,4 @@
-export interface UserUpdateParams {
+export interface IUserUpdateParams {
   name?: string;
   lastName?: string;
   email?: string;

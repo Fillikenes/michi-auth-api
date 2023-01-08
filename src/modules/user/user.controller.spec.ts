@@ -39,6 +39,7 @@ describe('UserController', () => {
         name: 'New name',
         lastName: 'New lastname',
         email: 'new@email.com',
+        rut: 'new rut',
       } as CreateUserDto;
 
       const expectedResponse = {
