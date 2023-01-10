@@ -4,7 +4,6 @@ import { UserWithAuthorization } from 'src/modules/user/models/user-authorizatio
 import { UserService } from '../../user/user.service';
 import { LocalStrategy } from './local.strategy';
 import { UnauthorizedException } from '@nestjs/common';
-import { exec } from 'child_process';
 
 describe('LocalStrategy', () => {
   let localStrategy: LocalStrategy;

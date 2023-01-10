@@ -9,6 +9,7 @@ on:
 env:
   ENVIRONMENT: development
   PORT: 3000
+  SECRET: secret
 
 jobs:
   build:
