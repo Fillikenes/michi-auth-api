@@ -1,85 +1,11 @@
-### CREATE NEW USER
-POST http://localhost:3000/user HTTP/1.1
-content-type: application/json
+@baseUrl = http://localhost:{{$dotenv PORT}}
+@authToken = {{login.response.body.access_token}}
 
-{
-    "name": "New user",
-    "lastName": "user lastname",
-    "email": "user@email.com",
-    "rut": "new rut"
-}
+###
 
-### UPDATE USER
-PUT http://localhost:3000/user/63b340af9709b7ab377bd285 HTTP/1.1
-content-type: application/json
+# @name register
 
-{
-    "name": "user update"
-}
-
-### GET USER BY RUT
-GET http://localhost:3000/user/new rut HTTP/1.1
-content-type: application/json
-
-### DELETE USER BY ID
-DELETE http://localhost:3000/user/63b340af9709b7ab377bd285 HTTP/1.1
-content-type: application/json
-
-
-### CREATE NEW PERMISION
-POST http://localhost:3000/permission HTTP/1.1
-content-type: application/json
-
-{
-    "name": "New permission",
-    "permissionIds": ["63b77cb1d501bee01d955f14"]
-}
-
-### UPDATE PERMISION
-PUT http://localhost:3000/permission/63b340af9709b7ab377bd285 HTTP/1.1
-content-type: application/json
-
-{
-    "name": "permission update",
-}
-
-### GET PERMISSION BY ID
-GET http://localhost:3000/permission/63b62b3f8023d79ec3957973 HTTP/1.1
-content-type: application/json
-
-### DELETE PERMISSION BY ID
-DELETE http://localhost:3000/permission/63b77cb1d501bee01d955f14 HTTP/1.1
-content-type: application/json
-
-
-### CREATE NEW ROLE
-POST http://localhost:3000/role HTTP/1.1
-content-type: application/json
-
-{
-    "name": "New role",
-    "permissionIds": ["63b77cb1d501bee01d955f14"]
-}
-
-### UPDATE ROLE
-PUT http://localhost:3000/role/63b340af9709b7ab377bd285 HTTP/1.1
-content-type: application/json
-
-{
-    "name": "role update"
-}
-
-### GET ROLE BY ID
-GET http://localhost:3000/role/63b77daabc1e7ea30f70333c HTTP/1.1
-content-type: application/json
-
-### DELETE ROLE BY ID
-DELETE http://localhost:3000/role/63b77daabc1e7ea30f70333c HTTP/1.1
-content-type: application/json
-
-
-### Register
-POST http://localhost:3000/auth/register HTTP/1.1
+POST {{baseUrl}}/auth/register HTTP/1.1
 content-type: application/json
 
 {
@@ -91,11 +17,141 @@ content-type: application/json
     "roleId": "63bad6805ef2c7f54a84aeb2"
 }
 
-### Register
-POST http://localhost:3000/auth/login HTTP/1.1
+###
+
+# @name login
+
+POST {{baseUrl}}/auth/login HTTP/1.1
 content-type: application/json
 
 {
     "email": "user2@email.com",
     "password": "1234"
 }
+
+###
+
+# @name create-user
+
+POST {{baseUrl}}/user HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "New user",
+    "lastName": "user lastname",
+    "email": "user@email.com",
+    "rut": "new rut"
+}
+
+###
+
+# @name update-user
+
+PUT {{baseUrl}}/user/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "user update"
+}
+
+###
+
+# @name get-user-by-rut
+
+GET {{baseUrl}}/user/new rut HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name delete-user
+
+DELETE {{baseUrl}}/user/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name create-permission
+
+POST {{baseUrl}}/permission HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "New permission",
+    "permissionIds": ["63b77cb1d501bee01d955f14"]
+}
+
+### 
+
+# @name update-permission
+
+PUT {{baseUrl}}/permission/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "permission update",
+}
+
+###
+
+# @name get-permission
+
+GET {{baseUrl}}/permission/63b62b3f8023d79ec3957973 HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name delete-permission
+
+DELETE {{baseUrl}}/permission/63b77cb1d501bee01d955f14 HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name create-role
+
+POST {{baseUrl}}/role HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "New role",
+    "permissionIds": ["63b77cb1d501bee01d955f14"]
+}
+
+###
+
+# @name update-role
+
+PUT {{baseUrl}}/role/63b340af9709b7ab377bd285 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "role update"
+}
+
+###
+
+# @name get-role
+
+GET {{baseUrl}}/role/63b77daabc1e7ea30f70333c HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name delete-role
+
+DELETE {{baseUrl}}/role/63b77daabc1e7ea30f70333c HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+

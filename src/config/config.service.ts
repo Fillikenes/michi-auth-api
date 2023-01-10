@@ -10,6 +10,7 @@ dotenv.config();
 export class ConfigService {
   public config: IConfigParams;
   private readonly DEFAULT_PORT = 3000;
+  private readonly DEFAULT_EXPIRATION_TIME = 60;
 
   constructor() {
     this._setup();
@@ -21,6 +22,8 @@ export class ConfigService {
       ENVIRONMENT: Joi.string()
         .valid(...Object.values(EEnvironment))
         .required(),
+      SECRET: Joi.string().required(),
+      EXPIRATION_TIME: Joi.number().default(this.DEFAULT_EXPIRATION_TIME),
     });
 
     const { value, error } = configSchema.validate(process.env, {
@@ -34,6 +37,8 @@ export class ConfigService {
     this.config = {
       environment: value.ENVIRONMENT,
       port: value.PORT,
+      secret: value.SECRET,
+      expirationTime: value.EXPIRATION_TIME,
     };
   }
 }

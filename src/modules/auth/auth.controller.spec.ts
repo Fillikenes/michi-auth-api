@@ -1,15 +1,15 @@
 import * as bcrypt from 'bcrypt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dtos';
-import { UserWithAuthorization } from '../user/models/user-authorization.model';
 
 describe('AuthController', () => {
   let controller: AuthController;
   let authService: AuthService;
-  let userService: UserService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,18 +21,13 @@ describe('AuthController', () => {
             register: jest.fn(),
           },
         },
-        {
-          provide: UserService,
-          useValue: {
-            getUserByEmail: jest.fn(),
-          },
-        },
+        JwtService,
       ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
-    userService = module.get<UserService>(UserService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -93,12 +88,7 @@ describe('AuthController', () => {
         .spyOn(bcrypt, 'compare')
         .mockImplementation(() => Promise.resolve(true));
 
-      const paramsBody = {
-        email: 'new@email.com',
-        password: '1234',
-      };
-
-      const expectedResponse: UserWithAuthorization = {
+      const paramsRequest: User = {
         id: '123',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -106,24 +96,21 @@ describe('AuthController', () => {
         lastName: 'New lastname',
         email: 'new@email.com',
         rut: 'new rut',
-        authorization: {
-          id: '123',
-          password: 'hash',
-          roleId: '1',
-          userRut: 'new rut',
-        },
       };
 
-      const getUserByEmailSpy = jest
-        .spyOn(userService, 'getUserByEmail')
-        .mockResolvedValue(expectedResponse);
+      const expectedResponse = { access_token: 'token' };
 
-      const result = await controller.login(paramsBody);
+      const signSpy = jest.spyOn(jwtService, 'sign').mockReturnValue('token');
+
+      const result = await controller.login({ user: paramsRequest });
 
       expect(result).toBeDefined();
-      expect(result).toEqual(true);
-      expect(getUserByEmailSpy).toHaveBeenCalled();
-      expect(getUserByEmailSpy).toHaveBeenCalledWith(paramsBody.email);
+      expect(result).toEqual(expectedResponse);
+      expect(signSpy).toHaveBeenCalled();
+      expect(signSpy).toHaveBeenCalledWith({
+        username: paramsRequest.email,
+        sub: paramsRequest.email,
+      });
     });
   });
 });
