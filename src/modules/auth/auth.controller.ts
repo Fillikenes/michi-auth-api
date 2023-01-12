@@ -1,15 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto, LoginDto } from './dtos';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
+import { RegisterDto } from './dtos';
 import { AuthService } from './auth.service';
 import { IRegisterParams } from './params/register-params';
-import { UserService } from '../user/user.service';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post('/register')
@@ -26,18 +28,15 @@ export class AuthController {
     return this.authService.register(registerParams);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
-  public async login(@Body() login: LoginDto) {
-    const { email, password } = login;
+  public async login(@Request() req) {
+    const user = req.user as User;
+    const payload = { username: user.email, sub: user.email };
 
-    const user = await this.userService.getUserByEmail(email);
-
-    if (!user) {
-      console.log('not found');
-      return;
-    }
-
-    return await bcrypt.compare(password, user.authorization.password);
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 
   private async _encryptPassword(password: string): Promise<string> {

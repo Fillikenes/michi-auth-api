@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CreateUserDto, UpdateUserDto } from './dtos';
 import { UserService } from './user.service';
 
@@ -32,6 +34,7 @@ export class UserController {
     return this.userService.deleteUser(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:rut')
   public async getUserByRut(@Param('rut') rut: string) {
     return this.userService.getUserByRut(rut);
