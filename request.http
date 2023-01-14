@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:{{$dotenv PORT}}
-@authToken = {{login.response.body.access_token}}
+@authToken = {{login.response.body.accessToken}}
+@authRefreshToken = {{login.response.body.refreshToken}}
 
 ###
 
@@ -28,6 +29,15 @@ content-type: application/json
     "email": "user2@email.com",
     "password": "1234"
 }
+
+###
+
+# @name refresh
+
+GET {{baseUrl}}/auth/refresh HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{authRefreshToken}}
+
 
 ###
 

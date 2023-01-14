@@ -1,6 +1,7 @@
 export interface IConfigParams {
   environment: string;
   port: number;
-  secret: string;
-  expirationTime: number;
+  jwtAccessSecret: string;
+  jwtRefreshSecret: string;
+  redisUrl: string;
 }

@@ -1,6 +1,7 @@
 export interface IEnvironmentParams {
   ENVIRONMENT: string;
   PORT: number;
-  SECRET: string;
-  EXPIRATION_TIME: number;
+  JWT_ACCESS_SECRET: string;
+  JWT_REFRESH_SECRET: string;
+  REDIS_URL: string;
 }

@@ -1,10 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dtos';
+import { CACHE_MANAGER } from '@nestjs/common';
+import { ConfigService } from '../../config/config.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -15,6 +16,16 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
+        { provide: CACHE_MANAGER, useValue: { set: jest.fn() } },
+        {
+          provide: ConfigService,
+          useValue: {
+            config: {
+              jwtAccessSecret: 'jwt_access_secret',
+              jwtRefreshSecret: 'jwt_refresh_secret',
+            },
+          },
+        },
         {
           provide: AuthService,
           useValue: {
@@ -88,29 +99,71 @@ describe('AuthController', () => {
         .spyOn(bcrypt, 'compare')
         .mockImplementation(() => Promise.resolve(true));
 
-      const paramsRequest: User = {
-        id: '123',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        name: 'New name',
-        lastName: 'New lastname',
-        email: 'new@email.com',
-        rut: 'new rut',
+      const paramsRequest: any = {
+        user: {
+          id: '123',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          name: 'New name',
+          lastName: 'New lastname',
+          email: 'new@email.com',
+        },
       };
 
-      const expectedResponse = { access_token: 'token' };
+      const expectedResponse = { accessToken: 'token', refreshToken: 'token' };
 
-      const signSpy = jest.spyOn(jwtService, 'sign').mockReturnValue('token');
+      const signSpy = jest
+        .spyOn(jwtService, 'signAsync')
+        .mockResolvedValue('token');
 
-      const result = await controller.login({ user: paramsRequest });
+      const result = await controller.login(paramsRequest);
 
       expect(result).toBeDefined();
       expect(result).toEqual(expectedResponse);
-      expect(signSpy).toHaveBeenCalled();
-      expect(signSpy).toHaveBeenCalledWith({
-        username: paramsRequest.email,
-        sub: paramsRequest.email,
-      });
+      expect(signSpy).toHaveBeenCalledTimes(2);
+      expect(signSpy.mock.calls).toEqual([
+        [
+          { sub: 'new@email.com', username: 'new@email.com' },
+          { expiresIn: '15m', secret: 'jwt_access_secret' },
+        ],
+        [
+          { sub: 'new@email.com', username: 'new@email.com' },
+          { expiresIn: '1h', secret: 'jwt_refresh_secret' },
+        ],
+      ]);
+    });
+  });
+
+  describe('#refresh', () => {
+    it('should refresh a user session and return a valid session', async () => {
+      const paramsRequest: any = {
+        user: {
+          sub: 'new@email.com',
+          refreshToken: 'token',
+        },
+      };
+
+      const expectedResponse = { accessToken: 'token', refreshToken: 'token' };
+
+      const signSpy = jest
+        .spyOn(jwtService, 'signAsync')
+        .mockResolvedValue('token');
+
+      const result = await controller.refreshSession(paramsRequest);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(expectedResponse);
+      expect(signSpy).toHaveBeenCalledTimes(2);
+      expect(signSpy.mock.calls).toEqual([
+        [
+          { sub: 'new@email.com', username: 'new@email.com' },
+          { expiresIn: '15m', secret: 'jwt_access_secret' },
+        ],
+        [
+          { sub: 'new@email.com', username: 'new@email.com' },
+          { expiresIn: '1h', secret: 'jwt_refresh_secret' },
+        ],
+      ]);
     });
   });
 });

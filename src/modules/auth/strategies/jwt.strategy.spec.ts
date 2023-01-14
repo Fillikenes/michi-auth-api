@@ -14,8 +14,7 @@ describe('JwtStrategy', () => {
           provide: ConfigService,
           useValue: {
             config: {
-              secret: 'test',
-              expirationTime: '100s',
+              jwtAccessSecret: 'test',
             },
           },
         },
@@ -39,8 +38,7 @@ describe('JwtStrategy', () => {
         username: 'test@example.com',
       });
 
-      expect(configService.config.secret).toBe('test');
-      expect(configService.config.expirationTime).toBe('100s');
+      expect(configService.config.jwtAccessSecret).toBe('test');
       expect(user.username).toEqual('test@example.com');
       expect(user.userId).toEqual('testid');
     });
