@@ -9,7 +9,9 @@ on:
 env:
   ENVIRONMENT: development
   PORT: 3000
-  SECRET: secret
+  JWT_ACCESS_SECRET: access-secret
+  JWT_REFRESH_SECRET: refresh-secret
+  REDIS_URL: redis-url
 
 jobs:
   build:

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CacheConfigModule } from './cache/cache-config.module';
 import { ConfigModule } from './config/config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PermissionModule } from './modules/permission/permission.module';
@@ -10,6 +11,7 @@ import { PrismaModule } from './shared/services/prisma/prisma.module';
 
 @Module({
   imports: [
+    CacheConfigModule,
     ConfigModule,
     PrismaModule,
     UserModule,
